@@ -50,6 +50,10 @@ exports.editStore = async (req, res) => {
   });
 };
 exports.updateStore = async (req, res) => {
+
+  //set the location data to be a point
+  req.body.location.type = 'Point';
+
   // 1 Get store from DB - Given the ID
 
   const store = await Store.findOneAndUpdate(
