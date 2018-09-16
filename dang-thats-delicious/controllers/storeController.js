@@ -1,5 +1,43 @@
 const mongoose = require("mongoose");
 const Store = mongoose.model("Store");
+const multer = require("multer");
+const jimp = require("jimp");
+const uuid = require("uuid");
+
+const multerOptions = {
+  storage: multer.memoryStorage(),
+  fileFilter: function(req, file, next) {
+    const isPhoto = file.mimetype.startsWith("image/");
+    if (isPhoto) {
+      next(null, true);
+    } else {
+      next(
+        {
+          message: "That file type isnt allowed"
+        },
+        false
+      );
+    }
+  }
+};
+
+exports.upload = multer(multerOptions).single("photo");
+
+exports.resize = async (req, res, next) => {
+  //check if there is no new file to resize
+  if (!req.file) {
+    next(); //skip to the next middleware
+    return;
+  }
+  const extention = req.file.mimetype.split("/")[1];
+  req.body.photo = `${uuid.v4()}.${extention}`;
+  //Now we resize
+  const photo = await jimp.read(req.file.buffer);
+  await photo.resize(800, jimp.AUTO);
+  await photo.write(`./public/uploads/${req.body.photo}`);
+  //Once we have written the photo to file system - Keep going!
+  next();
+};
 
 exports.homePage = (req, res) => {
   res.render("index");
@@ -50,9 +88,8 @@ exports.editStore = async (req, res) => {
   });
 };
 exports.updateStore = async (req, res) => {
-
   //set the location data to be a point
-  req.body.location.type = 'Point';
+  req.body.location.type = "Point";
 
   // 1 Get store from DB - Given the ID
 
@@ -63,14 +100,12 @@ exports.updateStore = async (req, res) => {
     req.body,
     {
       new: true, //return the new store, instead of the old one
-      runValidators:true //force model to run the "required" validators
+      runValidators: true //force model to run the "required" validators
     }
   ).exec();
 
-  req.flash('success', `Updated ${store.name}`);
+  req.flash("success", `Updated ${store.name}`);
 
   // redirect them to the store and tell them it worked
-res.redirect(`/stores/${store._id}/edit`);
-
-
+  res.redirect(`/stores/${store._id}/edit`);
 };
