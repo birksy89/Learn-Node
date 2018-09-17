@@ -109,3 +109,29 @@ exports.updateStore = async (req, res) => {
   // redirect them to the store and tell them it worked
   res.redirect(`/stores/${store._id}/edit`);
 };
+
+//Detail View
+
+exports.getStoreBySlug = async (req, res, next) => {
+  // 1 Get store from DB - Given the slug
+
+  const store = await Store.findOne({
+    slug: req.params.slug
+  });
+
+  //If the DB response is null - call next!!! - Move along the middleware
+  if(!store){
+    return next();
+  }
+
+  //Check what's coming through is right
+ //res.json(store);
+ //console.log(store)
+
+  // 3 Render out the detail view
+
+  res.render("store", {
+    title: `${store.name}`,
+    store: store
+  });
+};
