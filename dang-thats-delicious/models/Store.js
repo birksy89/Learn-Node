@@ -14,35 +14,46 @@ const storeSchema = new mongoose.Schema({
     trim: true
   },
   tags: [String],
-  created:{
-    type:Date,
+  created: {
+    type: Date,
     default: Date.now
   },
-  location:{
+  location: {
     type: {
-      type:String,
-      default: 'Point'
+      type: String,
+      default: "Point"
     },
-    coordinates: [{
-      type: Number,
-      required: 'You must supply Coordinates!'
-    }],
-    address:{
-      type:String,
-      required:'You Must supply an address'
+    coordinates: [
+      {
+        type: Number,
+        required: "You must supply Coordinates!"
+      }
+    ],
+    address: {
+      type: String,
+      required: "You Must supply an address"
     }
   },
-  photo:String
+  photo: String
 });
 
-storeSchema.pre('save', function(next){
-    if(!this.isModified('name')){
-        next(); //skip it
-        return; //stop function from
-    }
-    this.slug = slug(this.name);
-    next();
-    //TODO make slugs unique
-})
+storeSchema.pre("save", async function(next) {
+  if (!this.isModified("name")) {
+    next(); //skip it
+    return; //stop function from executing
+  }
+
+  this.slug = slug(this.name);
+
+  // find other stores that have a slug of wes, wes-1, wes-2
+  const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, "i");
+  const storesWithSlug = await this.constructor.find({ slug: slugRegEx });
+  if (storesWithSlug.length) {
+    this.slug = `${this.slug}-${storesWithSlug.length + 1}`;
+  }
+
+  next();
+  //TODO make slugs unique
+});
 
 module.exports = mongoose.model("Store", storeSchema);
