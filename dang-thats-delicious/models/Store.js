@@ -53,7 +53,6 @@ storeSchema.pre("save", async function(next) {
   }
 
   next();
-  //TODO make slugs unique
 });
 
 module.exports = mongoose.model("Store", storeSchema);
