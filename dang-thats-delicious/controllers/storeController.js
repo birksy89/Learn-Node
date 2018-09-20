@@ -120,18 +120,27 @@ exports.getStoreBySlug = async (req, res, next) => {
   });
 
   //If the DB response is null - call next!!! - Move along the middleware
-  if(!store){
+  if (!store) {
     return next();
   }
 
   //Check what's coming through is right
- //res.json(store);
- //console.log(store)
+  //res.json(store);
+  //console.log(store)
 
   // 3 Render out the detail view
 
   res.render("store", {
     title: `${store.name}`,
     store: store
+  });
+};
+
+exports.getStoresByTag = async (req, res, next) => {
+  const tags = await Store.getTagsList();
+  //res.json(tags);
+  res.render("tags", {
+    tags: tags,
+    title: "Tags"
   });
 };
