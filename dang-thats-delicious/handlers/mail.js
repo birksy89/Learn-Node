@@ -21,12 +21,22 @@ const transport = nodemailer.createTransport({
 //     text: 'Hello Normal World'
 // })
 
+const generateHTML = (filename, options = {}) => {
+  const html = pug.renderFile(
+    `${__dirname}/../views/email/${filename}.pug`,
+    options
+  );
+  console.log(options);
+  return html;
+};
+
 exports.send = async options => {
+  const html = generateHTML(options.filename, options);
   const mailOptions = {
     from: "Andrew Birks <andrew@purplecs.com>",
     to: options.user.email,
     subject: options.subject,
-    html: "This will be filled in later",
+    html: html,
     text: "This will be filled in later"
   };
 

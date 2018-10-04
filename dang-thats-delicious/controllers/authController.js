@@ -53,7 +53,8 @@ exports.forgot = async (req, res) => {
   await mail.send({
     user: user,
     subject: "Password Reset",
-    resetURL: resetURL
+    resetURL: resetURL,
+    filename: 'password-reset'
   });
 
   req.flash(
