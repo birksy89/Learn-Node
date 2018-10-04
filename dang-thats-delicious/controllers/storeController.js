@@ -119,7 +119,7 @@ exports.getStoreBySlug = async (req, res, next) => {
 
   const store = await Store.findOne({
     slug: req.params.slug
-  });
+  }).populate("author");
 
   //If the DB response is null - call next!!! - Move along the middleware
   if (!store) {
