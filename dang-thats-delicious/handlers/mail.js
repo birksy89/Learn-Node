@@ -26,18 +26,21 @@ const generateHTML = (filename, options = {}) => {
     `${__dirname}/../views/email/${filename}.pug`,
     options
   );
-  console.log(options);
-  return html;
+  const inlined = juice(html);
+  return inlined;
 };
 
 exports.send = async options => {
   const html = generateHTML(options.filename, options);
+  const text = htmlToText.fromString(html);
+
+
   const mailOptions = {
     from: "Andrew Birks <andrew@purplecs.com>",
     to: options.user.email,
     subject: options.subject,
     html: html,
-    text: "This will be filled in later"
+    text: text
   };
 
   const sendMail = promisify(transport.sendMail, transport);
