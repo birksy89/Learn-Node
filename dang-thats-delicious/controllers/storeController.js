@@ -71,6 +71,12 @@ exports.getStores = async (req, res) => {
   });
 };
 
+const confirmOwner = (store, user) => {
+  if (!store.author.equals(user._id)) {
+    throw Error("You Must own the store in order to edit it!");
+  }
+};
+
 exports.editStore = async (req, res) => {
   // 1 Get store from DB - Given the ID
 
@@ -80,6 +86,7 @@ exports.editStore = async (req, res) => {
 
   //res.json(store);
   // 2 Confirm they are the owner
+  confirmOwner(store, req.user);
 
   // 3 Render out the edit form so user can update
 
