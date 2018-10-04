@@ -50,6 +50,8 @@ exports.addStore = (req, res) => {
 };
 
 exports.createStore = async (req, res) => {
+  req.body.author = req.user._id;
+
   const store = await new Store(req.body).save();
   //console.log("It worked");
   req.flash(
@@ -138,7 +140,7 @@ exports.getStoreBySlug = async (req, res, next) => {
 
 exports.getStoresByTag = async (req, res, next) => {
   const tag = req.params.tag;
-  const tagQuery = tag || {$exists:true}
+  const tagQuery = tag || { $exists: true };
   const tagsPromise = Store.getTagsList();
   const storesPromise = Store.find({ tags: tagQuery });
 
@@ -149,8 +151,8 @@ exports.getStoresByTag = async (req, res, next) => {
 
   res.render("tag", {
     tags: tags,
-    tag:tag,
+    tag: tag,
     title: "Tags",
-    stores:stores
+    stores: stores
   });
 };
