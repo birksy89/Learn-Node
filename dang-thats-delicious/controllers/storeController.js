@@ -163,3 +163,7 @@ exports.getStoresByTag = async (req, res, next) => {
     stores: stores
   });
 };
+
+exports.searchStores = async (req, res, next)=>{
+  res.json(req.query)
+}
