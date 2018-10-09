@@ -28,7 +28,7 @@ function typeAhead(search) {
     }
 
     searchResults.style.display = "block";
-    searchResults.innerHTML = "";
+
 
     axios
       .get(`/api/search?q=${this.value}`)
@@ -36,7 +36,11 @@ function typeAhead(search) {
         if (res.data.length) {
           const html = searchResultsHTML(res.data);
           searchResults.innerHTML = html;
+          return;
         }
+
+        //Tell them nothing came back from the query
+        searchResults.innerHTML = `<div class="search__result">No Results for <strong>${this.value}</strong> found!</div>`;
       })
       .catch(err => {
         console.log(err);
