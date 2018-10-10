@@ -53,6 +53,8 @@ router.post(
   catchErrors(authController.update)
 );
 
+router.get("/map", catchErrors(storeController.mapPage));
+
 /*
   API
 */
@@ -60,5 +62,7 @@ router.post(
 router.get("/api/search", catchErrors(storeController.searchStores));
 
 router.get("/api/stores/near", catchErrors(storeController.mapStores));
+
+
 
 module.exports = router;
