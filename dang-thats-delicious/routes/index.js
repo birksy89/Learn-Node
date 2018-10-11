@@ -54,6 +54,7 @@ router.post(
 );
 
 router.get("/map", catchErrors(storeController.mapPage));
+router.get("/hearts", authController.isLoggedIn, catchErrors(storeController.getHearts));
 
 /*
   API

@@ -219,8 +219,31 @@ exports.heartStore = async (req, res) => {
   //Will the heart be added or removed?
   const operator = hearts.includes(req.params.id) ? "$pull" : "$addToSet";
 
-  const user = await User.findByIdAndUpdate(req.user._id, {
-    [operator]: { hearts: req.params.id }
-  },{new: true});
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      [operator]: { hearts: req.params.id }
+    },
+    { new: true }
+  );
   res.json(user);
+};
+
+exports.getHearts = async (req, res) => {
+  //My way - Populating extra field "Hearts"
+  const user = await User.findById(req.user._id).populate("hearts");
+  const heartedStores = user.hearts;
+
+  //Alternative Method - Wes does this in Lesson 36
+  const heartedStores2 = await Store.find({
+    _id: { $in: req.user.hearts }
+  });
+
+  //console.log(heartedStores);
+  //console.log(heartedStores2);
+
+  res.render("stores", {
+    title: "Hearted Stores",
+    stores: heartedStores
+  });
 };
