@@ -37,22 +37,22 @@ function loadPlaces(map, lat = 43.2, lng = -79.8) {
       marker.place = place;
 
       //Add InfoWindow to the marker
-      marker.addListener('click', function(){
-          const html = `
+      marker.addListener("click", function() {
+        const html = `
           <div class="popup">
           <a href="/store/${this.place.slug}">
-          <img src="/uploads/${this.place.photo || 'store.png'}" alt="${this.place.name}"/>
+          <img src="/uploads/${this.place.photo || "store.png"}" alt="${
+          this.place.name
+        }"/>
           <p>${this.place.name} - ${this.place.location.address}</p>
           </a>
           </div>
-          `
-          infoWindow.setContent(html)
-          infoWindow.open(map, this)
-
-      })
+          `;
+        infoWindow.setContent(html);
+        infoWindow.open(map, this);
+      });
       return marker;
     });
-
 
     //markers.forEach;
 
@@ -74,6 +74,11 @@ function makeMap(mapDiv) {
   loadPlaces(map);
   const input = $('[name="geolocate"]');
   const autocomplete = new google.maps.places.Autocomplete(input);
+  autocomplete.addListener("place_changed", () => {
+    const place = autocomplete.getPlace();
+    //console.log(place);
+    loadPlaces(map, place.geometry.location.lat(),place.geometry.location.lng())
+  });
   //console.log(input);
 }
 
