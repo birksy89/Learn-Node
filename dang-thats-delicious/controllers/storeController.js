@@ -123,11 +123,11 @@ exports.updateStore = async (req, res) => {
 //Detail View
 
 exports.getStoreBySlug = async (req, res, next) => {
-  // 1 Get store from DB - Given the slug
 
+  // 1 Get store from DB - Given the slug
   const store = await Store.findOne({
     slug: req.params.slug
-  }).populate("author");
+  }).populate("author reviews");
 
   //If the DB response is null - call next!!! - Move along the middleware
   if (!store) {
