@@ -253,10 +253,10 @@ exports.getTopStores = async (req, res) => {
 
   const stores = await Store.getTopStores();
 
-res.json(stores)
+//res.json(stores)
 
-  // res.render("topStores", {
-  //   title: "Top Stores",
-  //   stores: stores
-  // });
+  res.render("topStores", {
+    title: "Top Stores",
+    stores: stores
+  });
 };
