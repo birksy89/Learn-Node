@@ -63,8 +63,17 @@ exports.createStore = async (req, res) => {
 };
 
 exports.getStores = async (req, res) => {
+  const page = req.params.page || 1;
+  const limit = 4;
+  const skip = (page * limit) - limit;
+
   // 1 Get stores from DB
-  const stores = await Store.find();
+  const stores = await Store
+  .find()
+  .skip(skip)
+  .limit(limit)
+
+
   //console.log(stores)
   res.render("stores", {
     title: "Stores",
@@ -123,7 +132,6 @@ exports.updateStore = async (req, res) => {
 //Detail View
 
 exports.getStoreBySlug = async (req, res, next) => {
-
   // 1 Get store from DB - Given the slug
   const store = await Store.findOne({
     slug: req.params.slug
@@ -248,12 +256,10 @@ exports.getHearts = async (req, res) => {
   });
 };
 
-
 exports.getTopStores = async (req, res) => {
-
   const stores = await Store.getTopStores();
 
-//res.json(stores)
+  //res.json(stores)
 
   res.render("topStores", {
     title: "Top Stores",
