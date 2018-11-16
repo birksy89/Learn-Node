@@ -3,6 +3,7 @@ const mail = require("../handlers/mail");
 
 
 //Trialing out schedule work
+//This will call the function every 42 seconds!
 var schedule = require('node-schedule');
 var j = schedule.scheduleJob('42 * * * * *', function(){
   module.exports.getCollectionDates({params:{uprn: 10012784380}});
