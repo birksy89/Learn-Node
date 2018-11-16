@@ -1,7 +1,19 @@
 const axios = require("axios");
 const mail = require("../handlers/mail");
 
+
+//Trialing out schedule work
+var schedule = require('node-schedule');
+var j = schedule.scheduleJob('42 * * * * *', function(){
+  module.exports.getCollectionDates({params:{uprn: 10012784380}});
+});
+
+
+
 exports.getCollectionDates = async (req, res) => {
+
+  console.log("Getting Collection Dates!");
+
   const uprn = req.params.uprn;
   const councilUrl = `https://www.richmondshire.gov.uk/Umbraco/Api/BinRoundInfoApi/GetBinRoundData?uprn=${uprn}`;
 
@@ -41,9 +53,17 @@ exports.getCollectionDates = async (req, res) => {
         collections
       });
 
-      res.json({
-        Hello: "World",
-        uprn: req.params.uprn
-      });
+      if(res){
+        res.json({
+          Hello: "World",
+          uprn: req.params.uprn
+        });
+      }
+      else{
+        console.log(collections);
+
+      }
+
+
     });
 };
