@@ -34,10 +34,34 @@ exports.send = async options => {
   const html = generateHTML(options.filename, options);
   const text = htmlToText.fromString(html);
 
-
   const mailOptions = {
     from: "Andrew Birks <andrew@purplecs.com>",
     to: options.user.email,
+    subject: options.subject,
+    html: html,
+    text: text
+  };
+
+  const sendMail = promisify(transport.sendMail, transport);
+  return sendMail(mailOptions);
+};
+
+exports.sendToEmail = async options => {
+
+  let html = `<h1>Hello!</h1>
+  <ul>`;
+
+  html += options.collections.map(data => {
+    return `<li>${data.title}</li>`;
+  }).join('');
+
+  html += `</ul>`;
+
+  const text = htmlToText.fromString(html);
+
+  const mailOptions = {
+    from: "Andrew Birks <andrew@purplecs.com>",
+    to: options.email,
     subject: options.subject,
     html: html,
     text: text
